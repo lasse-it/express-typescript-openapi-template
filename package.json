@@ -1,0 +1,47 @@
+{
+  "name": "code-template",
+  "version": "2023.2.0",
+  "main": "src/index.ts",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf build",
+    "copy-files": "cp -r api locales package.json yarn.lock build",
+    "build-deps": "yarn install --frozen-lockfile --prod --cwd build",
+    "build": "yarn clean && tsc && yarn copy-files && yarn build-deps",
+    "dev": "nodemon --inspect src/index.ts",
+    "test": "jest",
+    "lint": "eslint src generated --ext .ts --fix",
+    "generate-openapi": "rm -rf generated/openapi && openapi-generator-cli generate -g typescript-node -i api/openapi.yaml -o generated/openapi --global-property models && eslint generated/openapi --ext .ts --fix"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-openapi-validator": "^5.0.2",
+    "i18next": "^22.4.10",
+    "i18next-fs-backend": "^2.1.1",
+    "i18next-http-middleware": "^3.2.2",
+    "morgan": "^1.10.0",
+    "typescript": "*"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.2",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.4.0",
+    "@types/morgan": "^1.9.4",
+    "@types/node": "^18.14.0",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "jest": "^29.4.3",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1"
+  }
+}

@@ -1,0 +1,239 @@
+openapi: 3.0.3
+info:
+  title: Code Template
+  description: Example of a RESTful API
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+    description: Local server
+  - url: 'https://dev.example.com'
+    description: Development server
+  - url: 'https://prod.example.com'
+    description: Production server
+paths:
+  /ping:
+    get:
+      summary: Ping the server
+      description: Ping the server
+      operationId: ping
+      x-eov-operation-handler: routes/ping
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PingResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorViewModel"
+  /items:
+    get:
+      summary: Get all items
+      description: Get all items
+      operationId: getItems
+      x-eov-operation-handler: routes/item
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemsResponse"
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/InternalError'
+    post:
+      summary: Create an item
+      description: Create an item
+      operationId: createItem
+      x-eov-operation-handler: routes/item
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+      requestBody:
+        description: Item to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Item"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemResponse"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/InternalError'
+  /item/{id}:
+    get:
+      summary: Get an item
+      description: Get an item
+      operationId: getItem
+      x-eov-operation-handler: routes/item
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+        - name: id
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            type: number
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemResponse"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/InternalError'
+    put:
+      summary: Update an item
+      description: Update an item
+      operationId: updateItem
+      x-eov-operation-handler: routes/item
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+        - name: id
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            type: number
+      requestBody:
+        description: Item to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Item"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemResponse"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/InternalError'
+    delete:
+      summary: Delete an item
+      description: Delete an item
+      operationId: deleteItem
+      x-eov-operation-handler: routes/item
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+        - name: id
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            type: number
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemResponse"
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/InternalError'
+components:
+  parameters:
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      description: Language
+      required: true
+      schema:
+        type: string
+        example: da,da-DK;q=0.9,en-US;q=0.8,en;q=0.7
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorViewModel"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorViewModel"
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorViewModel"
+  schemas:
+    ErrorViewModel:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message
+        reasonDisplayMessage:
+          type: string
+          description: Display message
+        reasonCode:
+          type: string
+          description: A reason code
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Item ID
+        name:
+          type: string
+          description: Item name
+        description:
+          type: string
+          description: Item description
+        price:
+          type: number
+          description: Item price
+    ItemResponse:
+      type: object
+      properties:
+        item:
+          $ref: "#/components/schemas/Item"
+    ItemsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+    PingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: pong
